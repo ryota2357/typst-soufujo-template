@@ -17,7 +17,7 @@
   件名: none,
   頭語: [拝啓],
   結語: [敬具],
-  送付書類: (),
+  同封物: (),
   備考: none,
   body,
 ) = {
@@ -87,11 +87,11 @@
   block(above: 3em, below: 0.9em, if 頭語 != none [#頭語　#本文] else { 本文 })
   if 結語 != none { align(right, 結語) }
 
-  if 送付書類.len() > 0 {
+  if 同封物.len() > 0 {
     v(1em)
     align(center, [記])
-    block(送付書類.map(書類 => {
-      let (名前, 数量) = if type(書類) == array { 書類 } else { (書類, none) }
+    block(同封物.map(項目 => {
+      let (名前, 数量) = if type(項目) == array { 項目 } else { (項目, none) }
       [・#名前]
       if 数量 != none { h(1em); [#数量] }
     }).join(linebreak()))
