@@ -1,7 +1,7 @@
 #let soufujo(
   日付: auto,
   宛先: (
-    会社名: [],
+    会社名: none,
     部署: none,
     氏名: none,
   ),
@@ -35,7 +35,9 @@
   v(1em)
 
   // 個人名があれば「様」、なければ組織宛として「御中」を付ける
+  // 宛先が none または全項目 none の場合は宛先なしとして何も出力しない
   {
+    let 宛先 = if 宛先 in (none, ()) { (:) } else { 宛先 }
     let 会社名 = 宛先.at("会社名", default: none)
     let 部署 = 宛先.at("部署", default: none)
     let 氏名 = 宛先.at("氏名", default: none)
@@ -45,13 +47,14 @@
       行.push(((部署, 氏名).filter(x => x != none).join(h(1em)), [様]).join(h(1em)))
     } else if 部署 != none {
       行.push([#部署#h(1em)御中])
-    } else {
+    } else if 行.len() > 0 {
       行.push([#行.pop()#h(1em)御中])
     }
-    block(行.join(linebreak()))
+    if 行.len() > 0 { block(行.join(linebreak())) }
   }
 
   {
+    let 差出人 = if 差出人 in (none, ()) { (:) } else { 差出人 }
     let 項目 = (
       ("郵便番号", x => [〒#x]),
       ("住所", x => x),
